@@ -13,3 +13,4 @@ All files must be in the same directory.
 A MongoDB database named: streamMovieDb must exist on your computer.
 Inside that database a MongoDB collection named: streamMovieCollection must exist.
 
+P.S. PLEASE don't commit anything until it's working code
