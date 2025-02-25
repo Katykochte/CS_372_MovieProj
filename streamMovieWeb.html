@@ -1,0 +1,53 @@
+<!-- Katy Kochte -->
+<!-- CS 372 Movie Streaming Site (HTML) -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Cinema Streaming Services</title>
+    <link rel="stylesheet" type="text/css" href="streamMovieStyle.css"> 
+</head>
+
+<body>
+
+    <header>
+        <!-- Header Content -->
+            <h1 style="font-size:40px;">
+                <b style="color:rgb(0, 88, 176);">Cinema Streaming Services</b>
+            </h1>
+            <div class="tab">
+                <button class="tablinks" onclick="openTab(event, 'Login')" style="color : rgb(9, 49, 90);">Login</button>
+            </div>
+            <br>
+    </header>
+
+    <!-- Form to Submit Name -->
+    <div id="Login" class="tabcontent">
+        <form id="nameForm" onsubmit="submitForm(event)">
+            <label for="nameOfUser">User: </label>
+            <input type="text" id="EnteredUser" name="EnteredUser"><br>
+            <label for="passwordOfUser">Password: </label>
+            <!-- Maybe make the type="password" instead of text below later? 
+                Easier for debugging to be able to see the text right now tho -->
+            <input type="text" id="EnteredPassword" name="EnteredPassword"><br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+
+<!--    
+        Button to display records 
+        Don't need right now but good to 
+        check if MongoDB Working
+
+        <button onclick="displayRecords()">Display</button> 
+--> 
+
+    <!-- Section to display fetched records -->
+    <p id="p_displayQuery"></p>
+
+    <!-- Link to external JavaScript file -->
+    <script src="streamMovieJava.js"></script>
+</body>
+</html>
