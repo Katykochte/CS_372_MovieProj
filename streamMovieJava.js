@@ -17,45 +17,20 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
 }
 
-
-// Display records from MongoDB
-async function displayRecords() {
-    try {
-        const response = await fetch('http://localhost:6543/display');
-        const records = await response.json(); // Parse response as JSON
-
-        if (records.length === 0) {
-            document.getElementById('p_displayQuery').innerText = "No records found.";
-            return;
-        }
-
-        let content = "<h2>All Records:</h2>";
-
-        records.forEach(record => {
-            content += "<div style='padding: 2px; margin: 2px;'>";
-            Object.entries(record).forEach(([key, value]) => {
-                content += `<p><strong>${key}:</strong> ${value}</p>`;
-            });
-            content += "</div>";
-        });
-
-        document.getElementById("p_displayQuery").innerHTML = content;
-    } catch (error) {
-        console.error("Error fetching records:", error);
-        alert("Error fetching records.");
-    }
-}
-
 // Check Password for right chars
-function validatePassword(password, user) {
+function validatePassword(enteredPassword, enteredUser) {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8}$/; 
 
-    if (!passwordRegex.test(password)) {
+    if (!passwordRegex.test(enteredPassword)) {
         alert("Password must be 8 characters long and include at least one uppercase, lowercase, number, and special character.");
         return false;
     }
-    if (password == user) {
+    if (enteredPassword == enteredUser) {
         alert("Password and Username cannot be the same.")
+        return false;
+    }
+    if (!enteredPassword || !enteredUser) {
+        alert("Please enter both user and password.");
         return false;
     }
     return true;
@@ -73,42 +48,36 @@ function validateUsername(user) {
 
 // Submit User and Password
 async function submitForm(event) {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault(); 
 
-    const EnteredUser = document.getElementById("EnteredUser").value;
-    const EnteredPassword = document.getElementById("EnteredPassword").value;
+    const enteredUser = document.getElementById("enteredUser").value;
+    const enteredPassword = document.getElementById("enteredPassword").value;
 
-    if (!EnteredUser || !EnteredPassword) {
-        alert("Please enter both user and password.");
-        return;
-    }
-
-    if (!validatePassword(EnteredPassword, EnteredUser)) {
+    if (!validatePassword(enteredPassword, enteredUser) || !validateUsername(enteredUser)) {
         return; 
     }
 
-    if (!validateUsername(EnteredUser)) {
-        return;
-    }
-
     try {
-        const formData = new FormData();
-        formData.append('EnteredUser', EnteredUser);
-        formData.append('EnteredPassword', EnteredPassword);
-
-        const response = await fetch('http://localhost:6543/submit', {
-            method: 'POST',
-            body: formData
+        const response = await fetch("http://localhost:6543/checkLogin", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ enteredUser, enteredPassword })
         });
 
-        const result = await response.text();
-        alert(result); // Show success message from the server
+        const result = await response.json();
+
+        if (result.status === "newUser" || result.status === "goodLogin") {
+            alert(result.message);
+        } else if (result.status === "badLogin" || result.status == "userDeleted") {
+            alert(result.message);
+        } else {
+            console.error("Unknown status:", result.status);
+        }
 
         // Clear the input fields
-        document.getElementById("EnteredUser").value = '';
-        document.getElementById("EnteredPassword").value = '';
+        document.getElementById("enteredUser").value = "";
+        document.getElementById("enteredPassword").value = "";
     } catch (error) {
-        console.error("Error submitting form:", error);
         alert("Error submitting form");
     }
 }

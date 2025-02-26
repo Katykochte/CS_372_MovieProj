@@ -25,27 +25,13 @@
     <!-- Form to Submit Name -->
     <div id="Login" class="tabcontent">
         <form id="nameForm" onsubmit="submitForm(event)">
-            <label for="nameOfUser">User: </label>
-            <input type="text" id="EnteredUser" name="EnteredUser"><br>
-            <label for="passwordOfUser">Password: </label>
-            <!-- Maybe make the type="password" instead of text below later? 
-                Easier for debugging to be able to see the text right now tho -->
-            <input type="text" id="EnteredPassword" name="EnteredPassword"><br>
+            <label for="enteredUser">User: </label>
+            <input type="text" id="enteredUser" name="enteredUser"><br>
+            <label for="enteredPassword">Password: </label>
+            <input type="text" id="enteredPassword" name="enteredPassword"><br>
             <input type="submit" value="Login">
         </form>
     </div>
-
-
-<!--    
-        Button to display records 
-        Don't need right now but good to 
-        check if MongoDB Working
-
-        <button onclick="displayRecords()">Display</button> 
---> 
-
-    <!-- Section to display fetched records -->
-    <p id="p_displayQuery"></p>
 
     <!-- Link to external JavaScript file -->
     <script src="streamMovieJava.js"></script>

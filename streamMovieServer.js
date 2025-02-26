@@ -34,38 +34,71 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "streamMovieWeb.html"));
 });
 
-// Handle the form submission using POST
-app.post("/submit", upload.none(), async (req, res) => {
-    const { EnteredUser, EnteredPassword } = req.body; // Get values from form
+app.use(express.json());
 
-    if (!EnteredUser || !EnteredPassword) {
-        return res.status(400).send("Both user and password are required.");
+// Handle failed login attempts by keeping track of consecutive
+// login attempts, if number of attempts at 3, delete account
+async function handleFailedLogin(collection, enteredUser) {
+    // Find the user in the database
+    const existingUser = await collection.findOne({ enteredUser });
+
+    // Increment failedAttempts on failed login
+    const updatedAttempts = (existingUser.failedAttempts || 0) + 1;
+
+    if (updatedAttempts >= 3) {
+        // Delete the user after 3 consecutive failed attempts
+        await collection.deleteOne({ enteredUser });
+        return { 
+            status: "userDeleted", 
+            message: `User ${existingUser.enteredUser} deleted due to 3 consecutive failed login attempts.` };
+    } else {
+        // Update failedAttempts in the database
+        await collection.updateOne(
+            { enteredUser },
+            { $set: { failedAttempts: updatedAttempts } }
+        );
+        return { 
+            status: "badLogin", 
+            message: `${existingUser.enteredUser} failed login. Consecutive attempts: ${updatedAttempts}` };
     }
+}
+
+// Check if current login information matches any on record
+// If found a match, compare passwords for successful or unsuccessful login
+// If not found match create a new database entry with the information
+app.post("/checkLogin", upload.none(), async (req, res) => {
+    const { enteredUser, enteredPassword } = req.body; // Get values from form
 
     try {
         const database = client.db("streamMovieDb");
         const collection = database.collection("streamMovieCollection");
-        const result = await collection.insertOne({ EnteredUser, EnteredPassword }); // Insert both values
 
-        console.log(`Document inserted with _id: ${result.insertedId}`);
-        res.send(`Added: ${EnteredUser} with password: ${EnteredPassword}`);
+        // Check if the user already exists
+        const existingUser = await collection.findOne({ enteredUser });
+
+        if (!existingUser) {
+            // User does not exist, add new user
+            const result = await collection.insertOne({ enteredUser, enteredPassword, failedAttempts: 0 });
+            console.log(`New user added with _id: ${result.insertedId}`);
+            return res.json({ status: "newUser", message: `Added new user: ${enteredUser}` });
+        } else {
+            // User exists, check password
+            if (existingUser.enteredPassword === enteredPassword) {
+                // Reset failedAttempts to 0 on successful login
+                await collection.updateOne(
+                    { enteredUser },
+                    { $set: { failedAttempts: 0 } }
+                );
+                return res.json({ status: "goodLogin", message: "Good Login" });
+            } else {
+                // Handle failed login
+                const result = await handleFailedLogin(collection, enteredUser);
+                return res.json(result);
+            }
+        }
     } catch (error) {
-        console.error("Error inserting data:", error);
-        res.status(500).send("Error saving data.");
-    }
-});
-
-// New route for fetching and displaying all records from MongoDB
-app.get("/display", async (req, res) => {
-    try {
-        const database = client.db("streamMovieDb");
-        const collection = database.collection("streamMovieCollection");
-        const records = await collection.find({}).toArray(); // Fetch all records
-
-        res.json(records); // Send JSON response
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        res.status(500).json({ error: "Error fetching records." });
+        console.error("Error checking login:", error);
+        res.status(500).json({ error: "Error checking login." });
     }
 });
 
