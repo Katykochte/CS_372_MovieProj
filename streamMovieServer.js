@@ -6,6 +6,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const path = require("path");
+const nodemailer = require("nodemailer");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -99,6 +100,44 @@ app.post("/checkLogin", upload.none(), async (req, res) => {
     } catch (error) {
         console.error("Error checking login:", error);
         res.status(500).json({ error: "Error checking login." });
+    }
+});
+
+//Nodemailer and Password Reset functions
+//This just sets up the email system defaults
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: "CinemaStreamingCorner@gmail.com",
+        pass: "tjtv ipxx hwgh faae"
+    }
+});
+
+//Actual email sending part
+app.post("/requestPasswordReset", async (req, res) => {
+    const {email} = req.body;
+
+    try {
+        const database = client.db("streamMovieDb");
+        const collection = database.collection("streamMovieCollection");
+        //Check if they have an account
+        const user = await collection.findOne({ enteredUser: email});
+        if (!user) {
+            return res.json({ status: "error", message: "User not found"});
+        }
+        //Send email
+        await transporter.sendMail({
+            from: "CinemaStreamingCorner@gmail.com",
+            to: email,
+            subject: "Password Reset Request",
+            text: "Click this link to reset your password : LINK"
+        });
+
+        res.json({status: "success", message: "Password reset email will be sent"});
+
+    } catch (error) {
+        console.error("Error sending email", error);
+        res.status(500).json({error: "Error processing request."});
     }
 });
 

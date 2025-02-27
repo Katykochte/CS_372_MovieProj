@@ -81,3 +81,26 @@ async function submitForm(event) {
         alert("Error submitting form");
     }
 }
+
+//Password Reset Stuff
+
+//Shows the password reset form when pressed
+document.getElementById("forgotPasswordButton").addEventListener("click", function(){
+    document.getElementById("resetPasswordForm").style.display = "block";
+});
+
+//Text entry box for email
+document.getElementById("resetPasswordForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    const email = document.getElementById("email").value;
+
+    const response = await fetch("/requestPasswordReset", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({email})
+    });
+
+    const data = await response.json();
+    alert(data.message);
+    
+});
