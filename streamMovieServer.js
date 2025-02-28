@@ -1,4 +1,4 @@
-// Katy Kochte
+// Katy Kochte, Cleary Bettisworth, Sabian Cavazos
 // CS 372 Movie Streaming Site (Server)
 
 const { MongoClient } = require("mongodb");
@@ -90,7 +90,7 @@ app.post("/checkLogin", upload.none(), async (req, res) => {
                     { enteredUser },
                     { $set: { failedAttempts: 0 } }
                 );
-                return res.json({ status: "goodLogin", message: "Good Login" });
+                return res.json({ status: "goodLogin", message: `Welcome back ${enteredUser}!` });
             } else {
                 // Handle failed login
                 const result = await handleFailedLogin(collection, enteredUser);
@@ -103,8 +103,8 @@ app.post("/checkLogin", upload.none(), async (req, res) => {
     }
 });
 
-//Nodemailer and Password Reset functions
-//This just sets up the email system defaults
+// Nodemailer and Password Reset functions
+// This just sets up the email system defaults
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -113,7 +113,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-//Actual email sending part
+// Actual email sending function
 app.post("/requestPasswordReset", async (req, res) => {
     const {email} = req.body;
 
