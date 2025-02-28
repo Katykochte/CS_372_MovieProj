@@ -1,21 +1,15 @@
-// Katy Kochte
+// Katy Kochte, Cleary Bettisworth, Sabian Cavazos
 // CS 372 Movie Streaming Site (JavaScript)
 
 // Top tab control
-function openTab(evt, tabName) {
-    let i, tabcontent, tablinks;
-
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
+function openTab() {
+    document.getElementById("loginPage").style.display = "block";
+    document.getElementById("galleryPage").style.display = "none"
 }
+
+///////////////////////////////////
+// Login Functions
+///////////////////////////////////
 
 // Check Password for right chars
 function validatePassword(enteredPassword, enteredUser) {
@@ -36,6 +30,7 @@ function validatePassword(enteredPassword, enteredUser) {
     return true;
 }
 
+// Check Username for right requirements
 function validateUsername(user) {
     const passwordRegex = /^[a-zA-Z]+@[a-zA-Z]+\.com$/; // chars + @ + chars + .com
     
@@ -68,6 +63,8 @@ async function submitForm(event) {
 
         if (result.status === "newUser" || result.status === "goodLogin") {
             alert(result.message);
+            document.getElementById("loginPage").style.display = "none";
+            document.getElementById("galleryPage").style.display = "block";
         } else if (result.status === "badLogin" || result.status == "userDeleted") {
             alert(result.message);
         } else {
@@ -81,3 +78,28 @@ async function submitForm(event) {
         alert("Error submitting form");
     }
 }
+
+///////////////////////////////////
+// Password Reset Functions
+///////////////////////////////////
+
+// Shows the password reset form when pressed
+document.getElementById("forgotPasswordButton").addEventListener("click", function(){
+    document.getElementById("resetPasswordForm").style.display = "block";
+});
+
+// Text entry box for email
+document.getElementById("resetPasswordForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    const email = document.getElementById("email").value;
+
+    const response = await fetch("/requestPasswordReset", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({email})
+    });
+
+    const data = await response.json();
+    alert(data.message);
+    
+});

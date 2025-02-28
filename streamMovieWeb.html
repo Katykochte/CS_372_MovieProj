@@ -1,4 +1,4 @@
-<!-- Katy Kochte -->
+<!-- Katy Kochte, Cleary Bettisworth, Sabian Cavazos -->
 <!-- CS 372 Movie Streaming Site (HTML) -->
 
 <!DOCTYPE html>
@@ -17,13 +17,13 @@
                 <b style="color:rgb(0, 88, 176);">Cinema Streaming Services</b>
             </h1>
             <div class="tab">
-                <button class="tablinks" onclick="openTab(event, 'Login')" style="color : rgb(9, 49, 90);">Login</button>
+                <button class="tablinks" onclick="openTab()" style="color : rgb(255, 255, 255);">Login</button>
             </div>
             <br>
     </header>
 
-    <!-- Form to Submit Name -->
-    <div id="Login" class="tabcontent">
+    <!-- Division to submit login -->
+    <div id="loginPage" style="display:none;">
         <form id="nameForm" onsubmit="submitForm(event)">
             <label for="enteredUser">User: </label>
             <input type="text" id="enteredUser" name="enteredUser"><br>
@@ -31,7 +31,158 @@
             <input type="text" id="enteredPassword" name="enteredPassword"><br>
             <input type="submit" value="Login">
         </form>
+        <div id="resetPasswordPage">
+            <form id="resetPasswordForm" style="display:none;">
+                <br>
+                <input type="email" id="email" placeholder="Enter your email" required>
+                <button type="submit">Reset Password</button>
+            </form>
+            <button id="forgotPasswordButton">Forgot Password?</button>
+        </div> 
     </div>
+
+    <!-- Division for gallery content -->
+    <div id="galleryPage" style="display:none;">
+        <h1 style="font-size:35px;">
+            <b style="color:rgb(37, 106, 146);">Browse our gallery collection below:</b><br>
+        </h1>
+        <div class="row">
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Star Wars</span>
+                    <img src="StarWars.jpg" alt="StarWars" style="width:100%">
+                </div>
+            </div>
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Home Alone</span>
+                    <img src="HomeAlone.jpg" alt="HomeAlone" style="width:100%">
+                </div>
+            </div> 
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">ET</span>
+                    <img src="ET.jpg" alt="Joker" style="width:100%">
+                </div>
+            </div>
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Scream</span>
+                    <img src="Scream.jpg" alt="Scream" style="width:100%">
+                </div>
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Ant Man</span>
+                    <img src="AntMan.jpg" alt="AntMan" style="width:100%">
+                </div>
+            </div>
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Thor</span>
+                    <img src="Thor.jpg" alt="Thor" style="width:100%">
+                </div>
+            </div> 
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Spiderman</span>
+                    <img src="Spiderman.jpg" alt="Spiderman" style="width:100%">
+                </div>
+            </div>
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">The Exorcist</span>
+                    <img src="TheExorcist.jpg" alt="TheExorcist" style="width:100%">
+                </div>
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Jaws</span>
+                    <img src="Jaws.jpg" alt="TheGodfather" style="width:100%">
+                </div>
+            </div>
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Titanic</span>
+                    <img src="Titanic.jpg" alt="Titanic" style="width:100%">
+                </div>
+            </div> 
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">The Wizard of Oz</span>
+                    <img src="WizardOz.jpg" alt="WizardOz" style="width:100%">
+                </div>
+            </div>
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">ET</span>
+                    <img src="ET.jpg" alt="ET" style="width:100%">
+                </div>
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Back to the Future</span>
+                    <img src="BackToTheFuture.jpg" alt="BackToTheFuture" style="width:100%">
+                </div>
+            </div>
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Black Widow</span>
+                    <img src="BlackWidow.jpg" alt="BlackWidow" style="width:100%">
+                </div>
+            </div> 
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Dune</span>
+                    <img src="Dune.jpg" alt="Dune" style="width:100%">
+                </div>
+            </div>
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Batman</span>
+                    <img src="Batman.jpg" alt="Batman" style="width:100%">
+                </div>
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Jaws</span>
+                    <img src="Jaws.jpg" alt="Jaws" style="width:100%">
+                </div>
+            </div>
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Halloween</span>
+                    <img src="Halloween.jpg" alt="Halloween" style="width:100%">
+                </div>
+            </div> 
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Breakfast at Tiffany's</span>
+                    <img src="BreakfastAtTiff.jpg" alt="BreakfastAtTiff" style="width:100%">
+                </div>
+            </div>
+            <div class="column">
+                <div class="tooltip">
+                    <span class="tooltiptext">Jurassic Park</span>
+                    <img src="JurassicPark.jpg" alt="JurassicPark" style="width:100%">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
     <!-- Link to external JavaScript file -->
     <script src="streamMovieJava.js"></script>

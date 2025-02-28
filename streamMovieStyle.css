@@ -1,37 +1,74 @@
 /* 
-Katy Kochte
+Katy Kochte, Cleary Bettisworth, Sabian Cavazos
 CS 372 Movie Streaming Site (CSS)
 */
 
 
 .tab {
-    overflow: hidden;
-    background-color: #8eafe9;
-  }
+  overflow: hidden;
+  background-color: rgb(4, 108, 211);
+}
   
-  /* Style the buttons inside the tab */
-  .tab button {
-    background-color: inherit;
-    float: left;
-    outline: 3px solid #93b9ee;;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.2s;
-    font-size: 20px;
-  }
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  outline: 3px solid rgb(4, 108, 211);;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.2s;
+  font-size: 20px;
+  font-family:Georgia, 'Times New Roman', Times, serif;
+}
   
   /* Change background color of buttons on hover */
-  .tab button:hover {
-    background-color: #5f85e3;
-  }
+.tab button:hover {
+  background-color: #5f85e3;
+}
   
   /* Create an active/current tablink class */
-  .tab button.active {
-    background-color: #6293ee;
-  }
+.tab button.active {
+  background-color: #6293ee;
+}
   
   /* Style the tab content */
-  .tabcontent {
-    display: none;
-    padding: 6px 12px;
-  }
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+}
+
+.row {
+  display: flex;
+}
+  
+.column {
+  flex: 25%;
+  padding: 1px;
+}
+
+/* Style for the ToolTips */
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  background-color: rgb(180, 215, 250);
+  color: #000c4e;
+  text-align: center;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  bottom: 100%; /* Adjust to ensure it doesn't overlap */
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
