@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const path = require("path");
 const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -79,12 +80,21 @@ app.post("/checkLogin", upload.none(), async (req, res) => {
 
         if (!existingUser) {
             // User does not exist, add new user
-            const result = await collection.insertOne({ enteredUser, enteredPassword, failedAttempts: 0 });
+
+            //Generate salt to hash their password with
+            const salt = generateSalt();
+            // Hash the password
+            const hashedPassword = hashPassword(enteredPassword, salt);
+            //Store the salt alongside the password so that it can be rehashed at login time
+            const result = await collection.insertOne({ enteredUser, enteredPassword: hashedPassword, salt, failedAttempts: 0 });
+
             console.log(`New user added with _id: ${result.insertedId}`);
             return res.json({ status: "newUser", message: `Added new user: ${enteredUser}` });
         } else {
+            //Hash their entered password with the salt associated with their account to confirm its correct
+            const hashedPassword = hashPassword(enteredPassword, existingUser.salt);
             // User exists, check password
-            if (existingUser.enteredPassword === enteredPassword) {
+            if (hashedPassword === existingUser.enteredPassword) {
                 // Reset failedAttempts to 0 on successful login
                 await collection.updateOne(
                     { enteredUser },
@@ -102,6 +112,18 @@ app.post("/checkLogin", upload.none(), async (req, res) => {
         res.status(500).json({ error: "Error checking login." });
     }
 });
+
+//Password hashing function
+function hashPassword(password, salt) {
+    const hash = crypto.createHash("sha256");
+    hash.update(password + salt);
+    return hash.digest("hex");
+}
+
+//Function to generate random salt for hashing
+function generateSalt () {
+    return crypto.randomBytes(16).toString("hex");
+}
 
 // Nodemailer and Password Reset functions
 // This just sets up the email system defaults

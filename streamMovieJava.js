@@ -13,7 +13,7 @@ function openTab() {
 
 // Check Password for right chars
 function validatePassword(enteredPassword, enteredUser) {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8}$/; 
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/; 
 
     if (!passwordRegex.test(enteredPassword)) {
         alert("Password must be 8 characters long and include at least one uppercase, lowercase, number, and special character.");
