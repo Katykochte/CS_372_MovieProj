@@ -1,5 +1,7 @@
 // Katy Kochte, Cleary Bettisworth, Sabian Cavazos
 // CS 372 Movie Streaming Site (JavaScript)
+// Holds all login and password functionalities 
+// Works with streamMovieServer.js + streamMovieWeb.html
 
 // Top tab control
 function openTab() {

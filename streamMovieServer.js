@@ -39,6 +39,10 @@ app.get("/", (req, res) => {
 
 app.use(express.json());
 
+///////////////////////////////////
+// Login Functions
+///////////////////////////////////
+
 // Handle failed login attempts by keeping track of consecutive
 // login attempts, if number of attempts at 3, delete account
 async function handleFailedLogin(collection, user) {
@@ -84,16 +88,16 @@ app.post("/checkLogin", upload.none(), async (req, res) => {
         if (!existUser) {
             // User does not exist, add new user
 
-            //Generate salt to hash their password with
+            // Generate salt to hash their password with
             const salt = generateSalt();
             // Hash the password
             const hashedPassword = hashPassword(password, salt);
-            //Store the salt alongside the password so that it can be rehashed at login time
+            // Store the salt w/ the password so that it can be rehashed at login
             const result = await collection.insertOne({ user, 
                 password: hashedPassword, salt, failedAttempts: 0 });
 
             console.log(`New user added with _id: ${result.insertedId}`);
-            return res.json({ status: "newUser", message: `Added new user: ${user}` });
+            return res.json({ status: "newUser", message: `Added: ${user}` });
         } else {
             // Hash password w/ the salt associated w/ account to confirm right
             const hashedPassword = hashPassword(password, existUser.salt);
@@ -103,7 +107,7 @@ app.post("/checkLogin", upload.none(), async (req, res) => {
                 await collection.updateOne(
                     { user }, { $set: { failedAttempts: 0 } }
                 );
-                return res.json({ status: "goodLogin", message: `Welcome ${user}!` });
+                return res.json({ status: "goodLogin", message: `Hi ${user}!` });
             } else {
                 // Handle failed login
                 const result = await handleFailedLogin(collection, user);
@@ -127,6 +131,10 @@ function generateSalt () {
     return crypto.randomBytes(16).toString("hex");
 }
 
+///////////////////////////////////
+// Password Reset Functions
+///////////////////////////////////
+
 // Nodemailer and Password Reset functions
 // This just sets up the email system defaults
 const transporter = nodemailer.createTransport({
@@ -149,7 +157,7 @@ app.post("/requestPwReset", async (req, res) => {
         if (!user) {
             return res.json({ status: "error", message: "User not found"});
         }
-        //Send email
+        // Send email
         await transporter.sendMail({
             from: "CinemaStreamingCorner@gmail.com",
             to: email,
