@@ -12,18 +12,24 @@ function openTab() {
 ///////////////////////////////////
 
 // Check Password for right chars
-function validatePassword(enteredPassword, enteredUser) {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/; 
+function validatePw(password, user) {
+    // one lower, upper, number, special char and 8 long
+    const pwRegex = /^(?=.*[a-z])(?=.*[A-Z]).+$/; 
+    const pwRegex2 = /^(?=.*\d)(?=.*[\W_]).{8}$/;
 
-    if (!passwordRegex.test(enteredPassword)) {
-        alert("Password must be 8 characters long and include at least one uppercase, lowercase, number, and special character.");
+    if (!pwRegex.test(password)) {
+        alert("Password must have at least one upper and lowercase");
         return false;
     }
-    if (enteredPassword == enteredUser) {
+    if (!pwRegex2.test(password)) {
+        alert("Password must be 8 chars long with a # and special char");
+        return false;
+    }
+    if (password == user) {
         alert("Password and Username cannot be the same.")
         return false;
     }
-    if (!enteredPassword || !enteredUser) {
+    if (!password || !user) {
         alert("Please enter both user and password.");
         return false;
     }
@@ -31,8 +37,9 @@ function validatePassword(enteredPassword, enteredUser) {
 }
 
 // Check Username for right requirements
-function validateUsername(user) {
-    const passwordRegex = /^[a-zA-Z]+@[a-zA-Z]+\.com$/; // chars + @ + chars + .com
+function validateUser(user) {
+    // chars + @ + chars + .com
+    const passwordRegex = /^[a-zA-Z]+@[a-zA-Z]+\.com$/; 
     
     if (!passwordRegex.test(user)) {
         alert("User must be a valid email with @ and .com");
@@ -45,18 +52,17 @@ function validateUsername(user) {
 async function submitForm(event) {
     event.preventDefault(); 
 
-    const enteredUser = document.getElementById("enteredUser").value;
-    const enteredPassword = document.getElementById("enteredPassword").value;
+    const user = document.getElementById("user").value;
+    const password = document.getElementById("password").value;
 
-    if (!validatePassword(enteredPassword, enteredUser) || !validateUsername(enteredUser)) {
+    if (!validatePw(password, user) || !validateUser(user)) {
         return; 
     }
 
     try {
         const response = await fetch("http://localhost:6543/checkLogin", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ enteredUser, enteredPassword })
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user, password })
         });
 
         const result = await response.json();
@@ -65,15 +71,16 @@ async function submitForm(event) {
             alert(result.message);
             document.getElementById("loginPage").style.display = "none";
             document.getElementById("galleryPage").style.display = "block";
-        } else if (result.status === "badLogin" || result.status == "userDeleted") {
+        } else if (result.status === "badLogin" 
+                    || result.status == "userDeleted") {
             alert(result.message);
         } else {
             console.error("Unknown status:", result.status);
         }
 
         // Clear the input fields
-        document.getElementById("enteredUser").value = "";
-        document.getElementById("enteredPassword").value = "";
+        document.getElementById("user").value = "";
+        document.getElementById("password").value = "";
     } catch (error) {
         alert("Error submitting form");
     }
@@ -84,16 +91,22 @@ async function submitForm(event) {
 ///////////////////////////////////
 
 // Shows the password reset form when pressed
-document.getElementById("forgotPasswordButton").addEventListener("click", function(){
-    document.getElementById("resetPasswordForm").style.display = "block";
+document
+  .getElementById("forgotPwBT")
+  .addEventListener("click", function() {
+
+    document.getElementById("resetPwForm").style.display = "block";
 });
 
 // Text entry box for email
-document.getElementById("resetPasswordForm").addEventListener("submit", async function (event) {
+document
+  .getElementById("resetPwForm")
+  .addEventListener("submit", async function (event) {
+
     event.preventDefault();
     const email = document.getElementById("email").value;
 
-    const response = await fetch("/requestPasswordReset", {
+    const response = await fetch("/requestPwReset", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({email})
