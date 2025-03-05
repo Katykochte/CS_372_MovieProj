@@ -41,7 +41,7 @@ function validatePw(password, user) {
 // Check Username for right requirements
 function validateUser(user) {
     // chars + @ + chars + .com
-    const passwordRegex = /^[a-zA-Z]+@[a-zA-Z]+\.com$/; 
+    const passwordRegex = /^[a-zA-Z0-9]+@[a-zA-Z]+\.com$/; 
     
     if (!passwordRegex.test(user)) {
         alert("User must be a valid email with @ and .com");
